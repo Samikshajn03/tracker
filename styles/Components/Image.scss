@@ -1,0 +1,68 @@
+.modalinput {
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#imageUpload {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.image-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.image-preview-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 4px 8px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.remove-image-btn:hover {
+  background-color: rgba(200, 0, 0, 0.9);
+}
+.upload-button {
+  margin-top: 10px;
+  background-color: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.upload-button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.upload-success-msg {
+  color: green;
+  margin-top: 8px;
+}
