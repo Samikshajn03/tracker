@@ -1,19 +1,21 @@
 'use client';
 
-import { useState, useEffect } from 'react'; 
-import { Country, City, State } from 'country-state-city'; 
-import '../styles/Components/Destination.scss'; 
-import { saveDestination } from '../utils/apiFunctions/DestinationsSaveFunction'; 
+import { useState, useEffect } from 'react';
+import { Country, City, State } from 'country-state-city';
+import '../styles/Components/Destination.scss';
+import { saveDestination } from '../utils/apiFunctions/DestinationsSaveFunction';
 import { toast, ToastContainer } from 'react-toastify';
-import ImageUpload from './ImageUpload';  
+import ImageUpload from './ImageUpload';
 
-export default function DestinationModal({ onClose }) { 
-  const [countries, setCountries] = useState([]); 
-  const [cities, setCities] = useState([]); 
-  const [states, setStates] = useState([]); 
-  const [selectedCountry, setSelectedCountry] = useState(''); 
-  const [selectedState, setSelectedState] = useState(''); 
-  const [selectedCity, setSelectedCity] = useState(''); 
+export default function DestinationModal({ onClose }) {
+  const [countries, setCountries] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [states, setStates] = useState([]);
+
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedCity, setSelectedCity] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [memory, setMemory] = useState('');
   const [imageFiles, setImageFiles] = useState([]);
@@ -24,10 +26,8 @@ export default function DestinationModal({ onClose }) {
 
   const handleCountryChange = (e) => {
     const countryIso = e.target.value;
-    const countryObj = countries.find((c) => c.isoCode === countryIso);
-
-    setSelectedCountry(countryObj);
-    setSelectedState(null);
+    setSelectedCountry(countryIso);
+    setSelectedState('');
     setSelectedCity('');
     setStates(State.getStatesOfCountry(countryIso));
     setCities(City.getCitiesOfCountry(countryIso));
@@ -35,12 +35,12 @@ export default function DestinationModal({ onClose }) {
 
   const handleStateChange = (e) => {
     const stateName = e.target.value;
-    const stateObj = states.find((s) => s.name === stateName);
-
-    setSelectedState(stateObj);
+    setSelectedState(stateName);
     setSelectedCity('');
+
+    const stateObj = states.find((s) => s.name === stateName);
     if (stateObj) {
-      setCities(City.getCitiesOfState(selectedCountry.isoCode, stateObj.isoCode));
+      setCities(City.getCitiesOfState(selectedCountry, stateObj.isoCode));
     }
   };
 
@@ -70,13 +70,16 @@ export default function DestinationModal({ onClose }) {
       return;
     }
 
+    const countryObj = countries.find((c) => c.isoCode === selectedCountry);
+    const stateObj = states.find((s) => s.name === selectedState);
+
     try {
       setLoading(true);
 
       const result = await saveDestination({
         userId: user.id,
-        country: selectedCountry.name,     // ✅ full name
-        state: selectedState.name,         // ✅ full name
+        country: countryObj?.name,
+        state: stateObj?.name,
         city: selectedCity,
         memory,
         imageFiles,
@@ -146,7 +149,9 @@ export default function DestinationModal({ onClose }) {
         <ImageUpload onFilesChange={handleImagesChange} />
 
         <div className="modal-actions">
-          <button className="btn cancel" onClick={onClose}>Cancel</button>
+          <button className="btn cancel" onClick={onClose}>
+            Cancel
+          </button>
           <button className="btn save" onClick={handleSave} disabled={loading}>
             {loading ? 'Saving…' : 'Save'}
           </button>
