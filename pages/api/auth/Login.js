@@ -31,6 +31,6 @@ export default async function handler(req, res) {
     res.status(200).json({ user: { id, username, email }, token });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: 'Server error', detail: error.message  });
   }
 }
