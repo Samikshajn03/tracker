@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import NavBar from './NavBar';
-import '../styles/map.scss'
+import '../styles/map.scss';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -22,19 +22,17 @@ export default function LeafletMap() {
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const timeoutRef = useRef(null);
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  useEffect(() => {
-    // Open popup automatically when pendingMarker changes (new marker)
-    if (pendingMarker) setPopupOpen(true);
-    else setPopupOpen(false);
-  }, [pendingMarker]);
 
   useEffect(() => {
     fetchMarkers();
   }, []);
 
-  // Fetch saved markers from backend
+  useEffect(() => {
+    if (markerRef.current) {
+      markerRef.current.openPopup();
+    }
+  }, [pendingMarker]);
+
   const fetchMarkers = async () => {
     try {
       const res = await fetch('/api/markers');
@@ -45,7 +43,6 @@ export default function LeafletMap() {
     }
   };
 
-  // Save marker to backend
   const saveMarkerToDB = async (latitude, longitude, label) => {
     const user_id = sessionStorage.getItem('id');
     if (!user_id) {
@@ -67,14 +64,12 @@ export default function LeafletMap() {
     }
   };
 
-  // Handle map clicks: add pending marker (without label)
   const onMapClick = (e) => {
-    const { lat, lng } = e.latlng; // Leaflet provides lat and lng
+    const { lat, lng } = e.latlng;
     setPendingMarker({ latitude: lat, longitude: lng });
     setLabel('');
   };
 
-  // Handle search input change with debounce
   const onSearchChange = (e) => {
     const val = e.target.value;
     setQuery(val);
@@ -82,7 +77,6 @@ export default function LeafletMap() {
     timeoutRef.current = setTimeout(() => fetchSuggestions(val), 500);
   };
 
-  // Fetch search suggestions from OpenStreetMap Nominatim
   const fetchSuggestions = async (q) => {
     if (!q) {
       setSearchResults([]);
@@ -90,11 +84,10 @@ export default function LeafletMap() {
     }
     try {
       const res = await fetch(
-  `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-    q
-  )}&addressdetails=1&limit=5&accept-language=en`
-);
-
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          q
+        )}&addressdetails=1&limit=5&accept-language=en`
+      );
       const data = await res.json();
       setSearchResults(data);
     } catch (error) {
@@ -102,20 +95,17 @@ export default function LeafletMap() {
     }
   };
 
-  // Handle search result selection: add pending marker
   const onSearchSelect = (place) => {
-    // Use place.lat and place.lon from Nominatim response
     const latitude = parseFloat(place.lat);
     const longitude = parseFloat(place.lon);
     setPendingMarker({ latitude, longitude });
     setLabel('');
     setQuery('');
     setSearchResults([]);
-    // Center map to selected location
+
     if (mapRef.current) mapRef.current.setView([latitude, longitude], 13);
   };
 
-  // Save label for pending marker
   const onSaveLabel = async () => {
     if (!label.trim()) {
       alert('Please enter a label');
@@ -136,113 +126,99 @@ export default function LeafletMap() {
     setLabel('');
   };
 
-  
   const onMapCreated = (mapInstance) => {
     mapRef.current = mapInstance;
     mapInstance.on('click', onMapClick);
   };
 
   return (
-   <div className='map-container'>
-  <NavBar />
-  <div className='maps-portion' >
-    <div>
-    
-        <input
-          type="text"
-          placeholder="Search places..."
-          value={query}
-          onChange={onSearchChange}
-          style={{ width: '100%', padding: '8px', fontSize: '16px' }}
-        />
-        {searchResults.length > 0 && (
-          <ul className='search-options'>
-            {searchResults.map((place) => (
-              <li
-                key={place.place_id}
-                onClick={() => onSearchSelect(place)}
-                style={{ width: '80%',padding: '6px 10px', cursor: 'pointer' }}
-              >
-                {place.display_name}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+    <div className='map-container'>
+      <NavBar />
+      <div className='maps-portion'>
+      <h2>Mark your footsteps </h2>
+        <div>
+          
+          <input
+            type='text'
+            placeholder='Search places...'
+            value={query}
+            onChange={onSearchChange}
+            style={{ width: '100%', padding: '8px', fontSize: '16px' }}
+          />
+          {searchResults.length > 0 && (
+            <ul className='search-options'>
+              {searchResults.map((place) => (
+                <li
+                  key={place.place_id}
+                  onClick={() => onSearchSelect(place)}
+                  style={{ width: '80%', padding: '6px 10px', cursor: 'pointer' }}
+                >
+                  {place.display_name}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-      {/* Map */}
-      <MapContainer
-        center={[20.5937, 78.9629]}
-        zoom={4}
-        style={{ height: '700px', width: '100%' }}
-        whenCreated={onMapCreated}
-        className='map'
-      >
-        <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        <MapContainer
+          center={[20.5937, 78.9629]}
+          zoom={4}
+          style={{ height: '700px', width: '100%' }}
+          whenCreated={onMapCreated}
+          className='map'
+        >
+          <TileLayer
+            attribution='&copy; OpenStreetMap contributors'
+            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          />
 
-        {/* Pending marker with popup to add label */}
-        {pendingMarker && (
-          <Marker position={[pendingMarker.latitude, pendingMarker.longitude]} ref={markerRef}>
-            <Popup className='dialog-box'
-              open={popupOpen}
-              onClose={() => {
-                
-              }}
-              autoPan={true}
+          {pendingMarker && (
+            <Marker
+              position={[pendingMarker.latitude, pendingMarker.longitude]}
+              ref={markerRef}
             >
-              <div >
-                <label>
-                  Label: <br />
-                  <input
-                    name="label-input"
-                    type="text"
-                    value={label}
-                    onChange={(e) => setLabel(e.target.value)}
-                    style={{ width: '100%', marginBottom: '8px' }}
-                    autoFocus
-                  />
-                </label>
-                <button
-                  onClick={() => {
-                    if (!label.trim()) {
-                      alert('Please enter a label');
-                      return;
-                    }
-                    onSaveLabel();
-                    setPopupOpen(false);
-                  }}
-                  style={{ marginRight: '8px' }}
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => {
-                    onCancelLabel();
-                    setPopupOpen(false);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </Popup>
-          </Marker>
-        )}
+              <Popup className='dialog-box' autoPan={true}>
+                <div>
+                  <label>
+                    Label: <br />
+                    <input
+                      name='label-input'
+                      type='text'
+                      value={label}
+                      onChange={(e) => setLabel(e.target.value)}
+                      style={{ width: '100%', marginBottom: '8px' }}
+                      autoFocus
+                    />
+                  </label>
+                  <button
+                    onClick={() => {
+                      if (!label.trim()) {
+                        alert('Please enter a label');
+                        return;
+                      }
+                      onSaveLabel();
+                    }}
+                    style={{ marginRight: '8px' }}
+                  >
+                    Save
+                  </button>
+                  <button onClick={onCancelLabel}>Cancel</button>
+                </div>
+              </Popup>
+            </Marker>
+          )}
 
-        {/* Saved markers */}
-        {savedMarkers.map((marker, idx) => (
-          <Marker key={idx} position={[marker.latitude, marker.longitude]}>
-            <Popup>
-              <strong>{marker.label || 'Saved location'}</strong>
-              <br />
-              Added on: {new Date(marker.created_at).toLocaleString()}
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+          {savedMarkers.map((marker, idx) => (
+            <Marker key={idx} position={[marker.latitude, marker.longitude]}>
+              <Popup>
+                <strong>{marker.label || 'Saved location'}</strong>
+                <br />
+                Added on: {new Date(marker.created_at).toLocaleString()}
+              </Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
     </div>
   );
 }

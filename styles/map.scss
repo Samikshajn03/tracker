@@ -27,9 +27,14 @@
     align-items: center;
    margin-right: 50px;
     width: 100%;
-    gap: 5rem;
+    gap: 3rem;
+   
 }
-
+h2{
+     background: linear-gradient(to right, rgb(130, 130, 241), rgb(94, 15, 173));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
 .map{
     border-radius: 20px;
