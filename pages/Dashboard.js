@@ -51,7 +51,7 @@ export default function Dashboard() {
       <div className="dashboard-content">
         <div className="horizontal-bar">
           <h1 className="dashboard-title">Add Destinations</h1>
-          <div className="search-container">
+          {/* <div className="search-container">
             <input
               type="text"
               className="search-input"
@@ -59,7 +59,7 @@ export default function Dashboard() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
+          </div> */}
         </div>
 
         <button className="add-btn" onClick={() => setShowModal(true)}>
