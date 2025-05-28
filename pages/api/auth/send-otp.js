@@ -14,7 +14,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Check if email exists in users table
     const userCheck = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
 
     if (userCheck.rows.length === 0) {
@@ -22,7 +21,7 @@ export default async function handler(req, res) {
     }
 
     const otp = crypto.randomInt(100000, 999999).toString();
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); 
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -34,13 +33,12 @@ export default async function handler(req, res) {
       },
     });
 
-    // Insert OTP into database
     await pool.query(
       'INSERT INTO email_otps (email, otp, expires_at) VALUES ($1, $2, $3)',
       [email, otp, expiresAt]
     );
 
-    // Send OTP via email
+    
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,

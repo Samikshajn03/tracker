@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaUser, FaRegEnvelope, FaLock, FaRegEye } from 'react-icons/fa';
-import styles from '../../styles/Components/Signup.scss';
+import '../../styles/Components/Signup.scss';
 import { registerUser } from '../../utils/apiFunctions/auth/RegisterUserFunction'; 
+import { ToastContainer,toast } from 'react-toastify';
 
 const SignUpForm = () => {
   const [username, setUsername] = useState('');
@@ -23,14 +24,14 @@ const SignUpForm = () => {
     setSuccess('');
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
 
     setLoading(true);
     try {
       const data = await registerUser({ username, email, password });
-      setSuccess('Registration successful!');
+      toast.success('Registration successful!');
       setUsername('');
       setEmail('');
       setPassword('');
@@ -40,7 +41,7 @@ const SignUpForm = () => {
       router.push('/'); 
     }, 1500);
     } catch (err) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -118,6 +119,7 @@ const SignUpForm = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

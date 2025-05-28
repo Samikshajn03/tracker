@@ -4,27 +4,24 @@ import Link from 'next/link';
 import { FaRegEnvelope, FaRegEye } from 'react-icons/fa';
 import styles from '../../styles/Components/Login.scss'; 
 import { loginUser } from '../../utils/apiFunctions/auth/LoginUserFunction';
+import { ToastContainer,toast } from 'react-toastify';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
     setLoading(true);
 
     try{
       await loginUser({email, password});
-      setSuccess('Login success');
+      toast.success('Login success');
       router.push('/Dashboard');
     } catch(err){
-      setError(err.message);
+      toast.error(err.message);
     } finally{
       setLoading(false);
     }
@@ -40,7 +37,6 @@ const LoginForm = () => {
             <p className="login-text">LOGIN</p>
 
             <form  className="data" onSubmit={handleSubmit}>
-              {error && <p style={{ color: 'red' }}>{error}</p>}
 
               <div className='email-input'>
                 <FaRegEnvelope style={{ marginRight: '8px', color: 'black' }} />
@@ -100,6 +96,7 @@ const LoginForm = () => {
           </div>
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };
