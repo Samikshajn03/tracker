@@ -4,25 +4,30 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { latitude, longitude, label, user_id } = req.body;
 
-    if (!latitude || !longitude || !user_id) {
-      return res.status(400).json({ error: 'Latitude, longitude, and user_id are required' });
+    if (!user_id) {
+      return res.status(400).json({ error: 'user_id is required' });
     }
 
+    // If latitude and longitude are provided, treat as save marker
+    if (latitude && longitude) {
+      try {
+        await pool.query(
+          'INSERT INTO mapmarkers (latitude, longitude, label, user_id) VALUES ($1, $2, $3, $4)',
+          [latitude, longitude, label || null, user_id]
+        );
+        return res.status(201).json({ message: 'Marker saved successfully' });
+      } catch (error) {
+        console.error('DB insert error:', error);
+        return res.status(500).json({ error: 'Failed to save marker', details: error.message });
+      }
+    }
+
+    // Otherwise, treat as fetch markers by user
     try {
-      await pool.query(
-        'INSERT INTO mapmarkers (latitude, longitude, label, user_id) VALUES ($1, $2, $3, $4)',
-        [latitude, longitude, label || null, user_id]
+      const result = await pool.query(
+        'SELECT * FROM mapmarkers WHERE user_id = $1 ORDER BY created_at DESC',
+        [user_id]
       );
-      return res.status(201).json({ message: 'Marker saved successfully' });
-    } catch (error) {
-         console.error('DB insert error:', error);
-      return res.status(500).json({ error: 'Failed to save marker', details: error.message });
-    }
-  }
-
-  if (req.method === 'GET') {
-    try {
-      const result = await pool.query('SELECT * FROM mapmarkers ORDER BY created_at DESC');
       return res.status(200).json(result.rows);
     } catch (error) {
       return res.status(500).json({ error: 'Failed to fetch markers', details: error.message });

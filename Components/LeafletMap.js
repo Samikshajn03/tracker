@@ -34,14 +34,30 @@ export default function LeafletMap() {
   }, [pendingMarker]);
 
   const fetchMarkers = async () => {
-    try {
-      const res = await fetch('/api/markers');
-      const data = await res.json();
+  const user_id = sessionStorage.getItem('id');
+  if (!user_id) {
+    console.error('User ID not found in sessionStorage.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/markers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
       setSavedMarkers(data);
-    } catch (error) {
-      console.error('Failed to fetch markers:', error);
+    } else {
+      console.error('Error fetching markers:', data.error || 'Unknown error');
     }
-  };
+  } catch (error) {
+    console.error('Failed to fetch markers:', error);
+  }
+};
+
 
   const saveMarkerToDB = async (latitude, longitude, label) => {
     const user_id = sessionStorage.getItem('id');
