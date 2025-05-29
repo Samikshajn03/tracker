@@ -12,6 +12,21 @@
     gap: 2rem;
     height: 100vh;
     overflow: hidden;
+    
+}
+.map-container::before{
+     background-image: url('/bg.jpg'); 
+  background-size: cover;
+  background-position: center;
+  opacity: 0.5; 
+  z-index: -1;
+   content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
 }
  
 @media (max-width:800px){
@@ -25,9 +40,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin:0 50px 50px 0;
+    margin:30px 50px 50px 0;
     width: 100%;
-    gap: 3rem;
+    gap: 1.6rem;
 }
 
 

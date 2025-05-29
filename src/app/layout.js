@@ -1,5 +1,5 @@
 
-import '../styles/globals.scss';
+import '../app/globals.css';
 
 export const metadata = {
   title: 'My App',

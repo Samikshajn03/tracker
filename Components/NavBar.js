@@ -18,7 +18,7 @@ export default function NavBar() {
       <div className="nav-container">
         <div className="nav-logo">
           <img src="/logo.png" className="logo"/>
-          <p>Lets's Travel</p>
+          <p className='nav-logo'>Lets's Travel</p>
         </div>
 
        
