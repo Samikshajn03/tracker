@@ -76,7 +76,7 @@ export default function Dashboard() {
           {loading ? (
             <p>Loading destinations...</p>
           ) : destinations.length === 0 ? (
-            <p>No destinations found.</p>
+            <p>Add your memorable journey here!!</p>
           ) : (
             destinations
               .filter((dest) =>
