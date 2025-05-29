@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { fetchUserProfile } from '../utils/apiFunctions/ProfileDataFunction';
 
 export default function UserData() {
-  const [imageUrl, setImageUrl] = useState('/Paris.jpg');
+  const [imageUrl, setImageUrl] = useState('/default.png');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
 
@@ -72,7 +72,7 @@ export default function UserData() {
             <div className="profileInfoContainer">
               <div className="profileImageContainer">
                 <img
-                  src={imageUrl || '/default-profile.png'}
+                  src={imageUrl || '/default.png'}
                   alt="Profile"
                   width={150}
                   height={150}
