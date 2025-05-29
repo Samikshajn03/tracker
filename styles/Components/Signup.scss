@@ -52,6 +52,10 @@ $max-width: 1200px;
     color: #3A3A3A;
     font-weight: 600;
     margin-left: 0.5em;
+     @media (max-width:700px){
+        display: grid;
+        place-content: center;
+      } 
 }
 .signup-text{
    background: linear-gradient(to right, rgb(130, 130, 241), rgb(94, 15, 173));
