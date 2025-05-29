@@ -64,6 +64,17 @@ body{
     font-size: 1rem;
    
 }
+.profileImage{
+  height: 170px;
+  width: 170px;
+  // border-radius: 50% 50%;
+  border-radius: 20px;
+
+  @media(max-width:500px){
+    height: 140px;
+    width: 140px;
+  }
+}
 
  @media(max-width:1200px){
   .profileDetails{
@@ -84,8 +95,8 @@ body{
     // padding: 2rem 1rem;
     margin-top: 20%;
     gap: 0.5rem;
-    height: 50%;
-    width: 50%;
+    // height: 50%;
+    // width: 50%;
     font-size: 1em;
     
 }
@@ -98,7 +109,7 @@ body{
   align-items: center;
   font-size: 0.9rem;
 }
-.downloadButton, .logoutButton{
+ .logoutButton{
     background-color: #3b82f6;
   color: white;
   padding: 0.5rem 1rem;
@@ -113,6 +124,6 @@ body{
     background-color: #2563eb;
   }
 }
-img{
-    border-radius: 50% 50%;
-}
+// img{
+//     border-radius: 50% 50%;
+// }

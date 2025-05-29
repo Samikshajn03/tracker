@@ -74,8 +74,6 @@ export default function UserData() {
                 <img
                   src={imageUrl || '/default.png'}
                   alt="Profile"
-                  width={150}
-                  height={150}
                   className="profileImage"
                   crossOrigin="anonymous"
                 />
