@@ -46,6 +46,11 @@
     flex-direction: row;
     gap: 7rem;
     align-items: center;
+    @media (max-width:700px) {
+      flex-direction: column;
+      gap: 0;
+      
+    }
 }
 .maps-portion {
     display: flex;
@@ -82,11 +87,14 @@ h2{
   max-width: 1200px;    // max width to prevent too large on big screens
   height: 650px;        // fixed height
   margin: 0 auto;   
-  @media (max-width: 768px) {
-    height: 500px; // reduce map height for mobile
-    width: 95%;
-      }    // center horizontally
- 
+//   @media (max-width: 768px) {
+//     height: 700px; // reduce map height for mobile
+//     width: 95%;
+//       }   
+//        // center horizontally
+//  @media(max-height:600px){
+//   height: 500px;
+//  }
 }
 
 // .map {
