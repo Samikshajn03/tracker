@@ -151,7 +151,8 @@ export default function LeafletMap() {
     <div className='map-container'>
       <NavBar />
       <div className='maps-portion'>
-      <h2>Mark your footsteps </h2>
+        <div className='map-title'>
+      <h2>Mark your footsteps here!!! </h2>
         <div>
           
           <input
@@ -167,7 +168,7 @@ export default function LeafletMap() {
                 <li
                   key={place.place_id}
                   onClick={() => onSearchSelect(place)}
-                  style={{ width: '80%', padding: '6px 10px', cursor: 'pointer' }}
+                  style={{ width: '80%', padding: '6px 10px', cursor: 'pointer' , }}
                 >
                   {place.display_name}
                 </li>
@@ -175,66 +176,40 @@ export default function LeafletMap() {
             </ul>
           )}
         </div>
+        </div>
 
-        <MapContainer
-          center={[20.5937, 78.9629]}
-          zoom={4}
-          style={{ height: '700px', width: '100%' }}
-          whenCreated={onMapCreated}
-          className='map'
-        >
-          <TileLayer
-            attribution='&copy; OpenStreetMap contributors'
-            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-          />
-
-          {pendingMarker && (
-            <Marker
-              position={[pendingMarker.latitude, pendingMarker.longitude]}
-              ref={markerRef}
-            >
-              <Popup className='dialog-box' autoPan={true}>
-                <div>
-                  <label>
-                    Label: <br />
-                    <input
-                      name='label-input'
-                      type='text'
-                      value={label}
-                      onChange={(e) => setLabel(e.target.value)}
-                      style={{ width: '100%', marginBottom: '8px' }}
-                      autoFocus
-                    />
-                  </label>
-                  <button
-                    onClick={() => {
-                      if (!label.trim()) {
-                        alert('Please enter a label');
-                        return;
-                      }
-                      onSaveLabel();
-                    }}
-                    style={{ marginRight: '8px' }}
-                  >
-                    Save
-                  </button>
-                  <button onClick={onCancelLabel}>Cancel</button>
-                </div>
-              </Popup>
-            </Marker>
-          )}
-
-          {savedMarkers.map((marker, idx) => (
-            <Marker key={idx} position={[marker.latitude, marker.longitude]}>
-              <Popup>
-                <strong>{marker.label || 'Saved location'}</strong>
-                <br />
-                Added on: {new Date(marker.created_at).toLocaleString()}
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
+       <div className="map-wrapper">
+  <MapContainer
+    center={[20.5937, 78.9629]}
+    zoom={4}
+    style={{ height: '650px', width: '100%' }}
+    whenCreated={onMapCreated}
+    className="map"
+  >
+    <TileLayer
+      attribution="&copy; OpenStreetMap contributors"
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+    {/* Markers and Popups */}
+    {pendingMarker && (
+      <Marker position={[pendingMarker.latitude, pendingMarker.longitude]} ref={markerRef}>
+        <Popup className="dialog-box" autoPan={true}>
+          {/* Popup content */}
+        </Popup>
+      </Marker>
+    )}
+    {savedMarkers.map((marker, idx) => (
+      <Marker key={idx} position={[marker.latitude, marker.longitude]}>
+        <Popup>
+          <strong>{marker.label || 'Saved location'}</strong>
+          <br />
+          Added on: {new Date(marker.created_at).toLocaleString()}
+        </Popup>
+      </Marker>
+    ))}
+  </MapContainer>
+</div>
+</div>
     </div>
   );
 }

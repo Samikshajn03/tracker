@@ -4,14 +4,21 @@
     margin: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
-  
+    font-weight: 600;
+     scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
 }
 .map-container{
+   position: relative;
     display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    height: 100vh;
-    overflow: hidden;
+    flex-direction: column;
+    min-height: 100vh;
+     scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
     
 }
 .map-container::before{
@@ -29,12 +36,17 @@
 
 }
  
-@media (max-width:800px){
-    .map-container{
-    overflow: hidden;
-    }
+// @media (max-width:800px){
+//     .map-container{
+//     overflow: hidden;
+//     }
+// }
+.map-title{
+    display: flex;
+    flex-direction: row;
+    gap: 7rem;
+    align-items: center;
 }
-
 .maps-portion {
     display: flex;
     flex-direction: column;
@@ -43,6 +55,14 @@
     margin:30px 50px 50px 0;
     width: 100%;
     gap: 1.6rem;
+     overflow-y: auto;
+
+  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 }
 
 
@@ -56,6 +76,25 @@ h2{
     border-radius: 20px;
     border: 5px solid #3e78f7; 
 }
+
+.map-wrapper {
+  width: 80%;           // container width
+  max-width: 1200px;    // max width to prevent too large on big screens
+  height: 650px;        // fixed height
+  margin: 0 auto;   
+  @media (max-width: 768px) {
+    height: 500px; // reduce map height for mobile
+    width: 95%;
+      }    // center horizontally
+ 
+}
+
+// .map {
+//   height: 100%;         // full height of wrapper
+//   width: 100%;          // full width of wrapper
+//   border-radius: 20px;
+// }
+
 .dialog-box{
     height: 105px;
     width:300px;
