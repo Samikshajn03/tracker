@@ -8,7 +8,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'user_id is required' });
     }
 
-    // If latitude and longitude are provided, treat as save marker
     if (latitude && longitude) {
       try {
         await pool.query(
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // Otherwise, treat as fetch markers by user
     try {
       const result = await pool.query(
         'SELECT * FROM mapmarkers WHERE user_id = $1 ORDER BY created_at DESC',
